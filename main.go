@@ -15,9 +15,9 @@ func main() {
 		return
 	}
 
-	terminalutil.Progress("Scanning files...", 0, 10, func(add func(int), done func()) {
+	terminalutil.Progress("Scanning files...", 0, 10, func(set func(int), done func()) {
 		for i := 0; i < 10; i++ {
-			add(1)
+			set(i)
 			time.Sleep(time.Millisecond * 200)
 		}
 		done()

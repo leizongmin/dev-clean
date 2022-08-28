@@ -24,7 +24,7 @@ func Confirm(message string) bool {
 	return result == "Yes"
 }
 
-func Progress(prefix string, start int, total int, f func(add func(int), done func())) {
+func Progress(prefix string, start int, total int, f func(set func(int), done func())) {
 	bar := pb.New(total)
 	bar.Add(start)
 	bar.SetTemplateString(`{{with string . "prefix"}}{{.}} {{end}}{{counters . }} {{bar . }} {{percent . }} {{with string . "suffix"}} {{.}}{{end}}`)
@@ -32,13 +32,14 @@ func Progress(prefix string, start int, total int, f func(add func(int), done fu
 	bar.Set("speed", false)
 	bar.Start()
 
-	add := func(v int) {
-		bar.Add(v)
+	set := func(v int) {
+		bar.SetCurrent(int64(v))
 	}
 
 	done := func() {
+		set(total)
 		bar.Finish()
 	}
 
-	f(add, done)
+	f(set, done)
 }

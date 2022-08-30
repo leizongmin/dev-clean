@@ -91,7 +91,7 @@ func ScanDir(dir string, onEntry func(path string, info os.FileInfo) bool, onErr
 				continue
 			}
 
-			n, err := Scan(path, onEntry, onError)
+			n, err := ScanDir(path, onEntry, onError)
 			if err != nil {
 				if onError(path, err) {
 					continue

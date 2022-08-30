@@ -13,12 +13,25 @@ import (
 )
 
 func TestScan(t *testing.T) {
-	count, err := Scan(".", func(path string, info os.FileInfo) bool {
-		logutil.Infof("%s", path)
+	homeDir, err := os.UserHomeDir()
+	assert.NoError(t, err)
+
+	// for macOS
+	skipRe, err := regexp.Compile(fmt.Sprintf(`^%s/(\..*|go|Library|Applications|Desktop|Documents|Mail|Movies|Music|Pictures|News)$`, homeDir))
+	assert.NoError(t, err)
+	assert.NotNil(t, skipRe)
+
+	count, err := Scan(homeDir, func(path string, info os.FileInfo) bool {
+		if skipRe.MatchString(path) {
+			logutil.Warnf("skip: %s", path)
+			return false
+		}
+
+		// logutil.Infof("add: %s", path)
 		return true
 	}, nil)
 	assert.NoError(t, err)
-	assert.Greater(t, count, 0)
+	assert.Greater(t, count, int32(0))
 	fmt.Println(count)
 }
 
@@ -64,7 +77,7 @@ func TestScanDir(t *testing.T) {
 	})
 
 	assert.NoError(t, err)
-	assert.Greater(t, count, 0)
+	assert.Greater(t, count, int32(0))
 	fmt.Println(count)
 
 	fmt.Println(dirs)

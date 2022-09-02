@@ -21,7 +21,7 @@ bin: $(OUTDIR)/$(APPNAME)
 
 $(OUTDIR)/$(APPNAME): $(OUTDIR) $(SOURCES)
 	@echo "building with $(GO)..."
-	@$(GO) build -a -ldflags="-s -w" -o $@ main.go
+	@$(GO) build -a -ldflags="-s -w" -o $@ .
 	@ls -ahl $@
 
 .PHONY: run
